@@ -50,3 +50,21 @@ body {
   text-align: center;
   padding: 40px;
 }
+
+* {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.container {
+    width: min(1200px, 92%);
+    margin: auto;
+}

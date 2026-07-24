@@ -14,3 +14,46 @@
   border-radius: 8px;
   text-align: center;
 }
+
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 100vh;
+    padding: 20px;
+    background-position: center;
+  }
+
+  .overlay {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .overlay h1 {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .features {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .feature {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}

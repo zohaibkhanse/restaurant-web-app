@@ -5,6 +5,7 @@ import Navbar from "./components/NavBar";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Contact from "./pages/Contact";
+import Footer from "./components/Footer";
 import "./index.css";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
+      <Footer />
     </Router>
   );
 }
