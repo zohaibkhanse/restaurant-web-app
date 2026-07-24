@@ -1,16 +1,44 @@
-// src/components/Navbar.js
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import "./NavBar.css";
 
 function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <nav className="navbar">
-      <h2>🍽️ Bistro Delight</h2>
-      <div className="links">
-        <Link to="/">Home</Link>
-        <Link to="/menu">Menu</Link>
-        <Link to="/contact">Contact</Link>
+      <div className="logo">🍽️ Bistro Delight</div>
+
+      <div
+        className={`hamburger ${menuOpen ? "active" : ""}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
+
+      <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
+        <li>
+          <Link to="/" onClick={closeMenu}>
+            Home
+          </Link>
+        </li>
+
+        <li>
+          <Link to="/menu" onClick={closeMenu}>
+            Menu
+          </Link>
+        </li>
+
+        <li>
+          <Link to="/contact" onClick={closeMenu}>
+            Contact
+          </Link>
+        </li>
+      </ul>
     </nav>
   );
 }
