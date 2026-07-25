@@ -1,3 +1,5 @@
+// src/pages/Menu.jsx
+
 import React from "react";
 import "./Menu.css";
 
@@ -26,19 +28,23 @@ const menuItems = [
 
 function Menu() {
   return (
-    <div className="menu-page">
-      <h2>🍷 Our Signature Menu</h2>
+    <section className="menu-page">
+      <h1>🍷 Our Signature Menu</h1>
+
       <div className="menu-grid">
-        {menuItems.map(item => (
+        {menuItems.map((item) => (
           <div key={item.id} className="menu-item">
             <img src={item.img} alt={item.name} />
-            <h4>{item.name}</h4>
+
+            <h3>{item.name}</h3>
+
             <p>{item.desc}</p>
+
             <p className="price">{item.price}</p>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
