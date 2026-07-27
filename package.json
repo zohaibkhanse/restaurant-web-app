@@ -12,7 +12,6 @@
     "test:watch": "vitest --watch",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage"
-
   },
   "dependencies": {
     "react": "^19.1.1",
