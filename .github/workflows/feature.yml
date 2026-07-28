@@ -1,11 +1,9 @@
-name: React CI
+name: Features
 
 on:
   push:
     branches:
-      - develop
       - "feature/**"
-      - "hotfix/**"
 
   pull_request:
     branches:
@@ -105,3 +103,5 @@ jobs:
 
       - name: Build Project
         run: npm run build
+
+        
