@@ -41,7 +41,7 @@ function Home() {
           <div className="feature">
             <h3>⭐ Cozy Atmosphere</h3>
             <p>
-              Perfect for family dinners, dates and celebrations.
+              Perfect for family dinners, dates and celebrations. ZOHAIB KHAN
             </p>
           </div>
         </div>
