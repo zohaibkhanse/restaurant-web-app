@@ -5,7 +5,6 @@ on:
     branches:
       - develop
       - "feature/**"
-      - "hotfix/**"
 
   pull_request:
     branches:
@@ -105,3 +104,5 @@ jobs:
 
       - name: Build Project
         run: npm run build
+
+        
