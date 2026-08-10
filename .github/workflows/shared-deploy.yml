@@ -1,0 +1,49 @@
+name: Shared Deploy
+
+on:
+  workflow_call:
+    inputs:
+      inventory:
+        required: true
+        type: string
+
+      environment:
+        required: true
+        type: string
+
+    secrets:
+      SSH_PRIVATE_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: restaurant-web-app-build
+          path: dist
+
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install ansible -y
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Deploy with Ansible
+        run: |
+          ansible-playbook \
+            -i ansible/inventory/${{ inputs.inventory }} \
+            ansible/playbooks/deploy.yml
