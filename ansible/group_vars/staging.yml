@@ -1,0 +1,6 @@
+---
+server_name: staging.restaurant.local
+
+app_name: restaurant-web-app
+deploy_path: /var/www/restaurant-web-app
+keep_releases: 5

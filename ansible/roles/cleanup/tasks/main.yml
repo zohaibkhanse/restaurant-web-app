@@ -1,0 +1,26 @@
+---
+- name: Find all release directories
+  ansible.builtin.find:
+    paths: "{{ deploy_path }}/releases"
+    file_type: directory
+    recurse: false
+  register: release_directories
+
+- name: Sort release directories by name
+  ansible.builtin.set_fact:
+    sorted_releases: >-
+      {{
+        release_directories.files
+        | sort(attribute='path', reverse=true)
+      }}
+
+- name: Determine releases to delete
+  ansible.builtin.set_fact:
+    releases_to_delete: "{{ sorted_releases[keep_releases:] }}"
+
+- name: Remove old releases
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ releases_to_delete }}"
+  when: releases_to_delete | length > 0

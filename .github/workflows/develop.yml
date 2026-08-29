@@ -1,3 +1,4 @@
+
 name: Development Pipeline
 
 on:
@@ -167,26 +168,3 @@ jobs:
       - name: Run Tests With Coverage
         run: npm test -- --coverage
 
-
-  # ==========================================
-  # 7. CODE QUALITY - SONARQUBE
-  # ==========================================
-  # code-quality:
-  #   name: Code Quality Analysis
-  #   runs-on: ubuntu-latest
-
-  #   needs:
-  #     - lint
-  #     - unit-tests
-  #     - integration-tests
-  #     - security
-
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v4
-
-  #     - name: SonarQube Scan
-  #       uses: SonarSource/sonarqube-scan-action@v6
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

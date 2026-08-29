@@ -1,0 +1,33 @@
+---
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Remove default Nginx site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload Nginx
+
+- name: Create restaurant Nginx configuration
+  ansible.builtin.template:
+    src: restaurant-web-app.conf.j2
+    dest: /etc/nginx/sites-available/restaurant-web-app.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload Nginx
+
+- name: Enable restaurant Nginx site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/restaurant-web-app.conf
+    dest: /etc/nginx/sites-enabled/restaurant-web-app.conf
+    state: link
+  notify: Reload Nginx
+
+- name: Test Nginx configuration
+  ansible.builtin.command:
+    cmd: nginx -t
+  changed_when: false

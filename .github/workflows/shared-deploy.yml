@@ -33,17 +33,24 @@ jobs:
 
       - name: Install Ansible
         run: |
-          sudo apt update
-          sudo apt install ansible -y
+          sudo apt-get update
+          sudo apt-get install -y ansible
 
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 700 ~/.ssh
+
+          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY }}' > ~/.ssh/id_ed25519
+
           chmod 600 ~/.ssh/id_ed25519
 
       - name: Deploy with Ansible
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "True"
         run: |
           ansible-playbook \
             -i ansible/inventory/${{ inputs.inventory }} \
-            ansible/playbooks/deploy.yml
+            ansible/playbooks/deploy.yml \
+            -e "artifact_path=${GITHUB_WORKSPACE}/dist" \
+            -e "release_id=$(date +%Y%m%d%H%M%S)"

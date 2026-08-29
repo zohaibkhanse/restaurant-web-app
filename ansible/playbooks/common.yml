@@ -1,0 +1,9 @@
+---
+- name: Prepare Development Server
+  hosts: development
+  become: true
+  vars:
+    ansible_user: ahmad
+  
+  roles:
+    - common

@@ -1,0 +1,36 @@
+---
+- name: Rollback Restaurant Web App
+  hosts: all
+  become: true
+  vars_files:
+    - ../group_vars/development.yml
+  vars: 
+    ansible_user: ahmad
+  tasks:
+
+    - name: Check that requested release exists
+      ansible.builtin.stat:
+        path: "{{ deploy_path }}/releases/{{ release_id }}"
+      register: release
+
+    - name: Fail if requested release does not exist
+      ansible.builtin.fail:
+        msg: "Release does not exist: {{ deploy_path }}/releases/{{ release_id }}"
+      when: not release.stat.exists
+
+    - name: Point current symlink to requested release
+      ansible.builtin.file:
+        src: "{{ deploy_path }}/releases/{{ release_id }}"
+        dest: "{{ deploy_path }}/current"
+        state: link
+        owner: "{{ansible_user}}"
+        group: "{{ansible_user}}"
+        force: true
+      notify: Reload Nginx
+
+  handlers:
+
+    - name: Reload Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
