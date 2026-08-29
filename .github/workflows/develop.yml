@@ -11,9 +11,9 @@ on:
       - develop
 
 jobs:
+
   build:
     uses: ./.github/workflows/shared-build.yml
-
   deploy:
     needs: build
 
