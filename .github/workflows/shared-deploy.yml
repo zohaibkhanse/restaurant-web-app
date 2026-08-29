@@ -10,10 +10,17 @@ on:
       environment:
         required: true
         type: string
+      host:
+        required: true
+        type: string
+      user: 
+        required: true
+        type: string
 
     secrets:
       SSH_PRIVATE_KEY:
         required: true
+    
 
 jobs:
   deploy:
@@ -52,7 +59,7 @@ jobs:
           ssh \
             -i ~/.ssh/id_ed25519 \
             -o StrictHostKeyChecking=no \
-            ubuntu@${{ secrets.DEV_HOST }} \
+            ${{ inputs.user }}@${{ inputs.host }} \
             "echo SSH connection successful"
 
       - name: Deploy with Ansible
