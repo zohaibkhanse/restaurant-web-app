@@ -42,7 +42,7 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY }}' \
+          printf '%s\n' '${{ secrets.DEV_SSH_KEY }}' \
             > ~/.ssh/id_ed25519
 
           chmod 600 ~/.ssh/id_ed25519
@@ -52,7 +52,7 @@ jobs:
           ssh \
             -i ~/.ssh/id_ed25519 \
             -o StrictHostKeyChecking=no \
-            ubuntu@${{ vars.EC2_HOST }} \
+            ubuntu@${{ vars.DEV_HOST }} \
             "echo SSH connection successful"
 
       - name: Deploy with Ansible

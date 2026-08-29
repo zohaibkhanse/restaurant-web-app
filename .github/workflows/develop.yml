@@ -24,10 +24,10 @@ jobs:
       environment: development
 
     secrets:
-      SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
+      SSH_PRIVATE_KEY: ${{ secrets.DEV_HOST}}
 
 
-      
+
 # jobs:
 
 #   # ==========================================
