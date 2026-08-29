@@ -10,12 +10,6 @@ on:
       environment:
         required: true
         type: string
-      host:
-        required: true
-        type: string
-      user: 
-        required: true
-        type: string
 
     secrets:
       SSH_PRIVATE_KEY:
@@ -54,13 +48,13 @@ jobs:
 
           chmod 600 ~/.ssh/id_ed25519
 
-      - name: Verify SSH
-        run: |
-          ssh \
-            -i ~/.ssh/id_ed25519 \
-            -o StrictHostKeyChecking=no \
-            ${{ inputs.user }}@${{ inputs.host }} \
-            "echo SSH connection successful"
+      # - name: Verify SSH
+      #   run: |
+      #     ssh \
+      #       -i ~/.ssh/id_ed25519 \
+      #       -o StrictHostKeyChecking=no \
+      #       ubuntu@${{ secrets.DEV_HOST }} \
+      #       "echo SSH connection successful"
 
       - name: Deploy with Ansible
         env:

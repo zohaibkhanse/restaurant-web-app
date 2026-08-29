@@ -22,17 +22,10 @@ jobs:
     with:
       inventory: development.ini
       environment: development
-      # EC2 hostname/IP.
-      # EC2 hostname/IP.
-      host: ${{ secrets.DEV_HOST }}
-
-      # EC2 SSH username.
-      user: ${{ secrets.DEV_USER }}
-
-    # Secrets passed to the reusable workflow.
     secrets:
       # DEV_SSH_KEY contains the actual private SSH key.
       SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
+
 # jobs:
 
 #   # ==========================================
