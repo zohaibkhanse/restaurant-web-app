@@ -1,29 +1,134 @@
+# ==========================================================
+# SHARED DEPLOY WORKFLOW
+#
+# This workflow can be reused by:
+#
+# Development
+# Staging
+# Production
+#
+# ==========================================================
+
 name: Shared Deploy
+
+
+# ==========================================================
+# WORKFLOW CALL
+#
+# This workflow does NOT start by itself.
+#
+# Another workflow calls it using:
+#
+# uses: ./.github/workflows/shared-deploy.yml
+# ==========================================================
 
 on:
   workflow_call:
+
+    # ------------------------------------------------------
+    # INPUTS
+    # ------------------------------------------------------
+
     inputs:
+
+      # Inventory file to use.
+      #
+      # Example:
+      # development.ini
+      # production.ini
+      #
       inventory:
         required: true
         type: string
 
+
+      # GitHub Environment name.
+      #
+      # Example:
+      # development
+      # production
+      #
       environment:
         required: true
         type: string
 
+
+      # EC2 hostname or IP address.
+      #
+      # Example:
+      # 54.x.x.x
+      #
+      host:
+        required: true
+        type: string
+
+
+      # EC2 SSH username.
+      #
+      # Example:
+      # ubuntu
+      #
+      user:
+        required: true
+        type: string
+
+
+    # ------------------------------------------------------
+    # SECRETS
+    # ------------------------------------------------------
+
     secrets:
+
+      # Private SSH key passed by the caller.
       SSH_PRIVATE_KEY:
         required: true
 
+
+# ==========================================================
+# JOB
+# ==========================================================
+
 jobs:
+
   deploy:
+
+    name: Deploy Application
+
+    # GitHub creates a fresh Ubuntu runner.
     runs-on: ubuntu-latest
 
+    # Attach this job to the requested GitHub Environment.
+    #
+    # Example:
+    # development
+    #
     environment: ${{ inputs.environment }}
 
+
+    # ======================================================
+    # STEPS
+    # ======================================================
+
     steps:
+
+      # ----------------------------------------------------
+      # STEP 1
+      # Download repository
+      # ----------------------------------------------------
+
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+
+      # ----------------------------------------------------
+      # STEP 2
+      # Download artifact produced by build workflow
+      #
+      # The build workflow must upload an artifact with
+      # exactly this name:
+      #
+      # restaurant-web-app-build
+      # ----------------------------------------------------
 
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
@@ -31,34 +136,80 @@ jobs:
           name: restaurant-web-app-build
           path: dist
 
+
+      # ----------------------------------------------------
+      # STEP 3
+      # Install Ansible
+      # ----------------------------------------------------
+
       - name: Install Ansible
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
 
+
+      # ----------------------------------------------------
+      # STEP 4
+      # Configure SSH
+      #
+      # The private key comes from:
+      #
+      # secrets.SSH_PRIVATE_KEY
+      #
+      # The caller maps:
+      #
+      # DEV_SSH_KEY
+      #
+      # to:
+      #
+      # SSH_PRIVATE_KEY
+      # ----------------------------------------------------
+
       - name: Configure SSH
         shell: bash
         run: |
+
+          # Create SSH directory.
           mkdir -p ~/.ssh
+
+          # Secure SSH directory.
           chmod 700 ~/.ssh
 
-          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY}}' \
+          # Write private key to file.
+          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY }}' \
             > ~/.ssh/id_ed25519
 
+          # Secure private key.
           chmod 600 ~/.ssh/id_ed25519
+
+
+      # ----------------------------------------------------
+      # STEP 5
+      # Verify SSH connection to EC2
+      # ----------------------------------------------------
 
       - name: Verify SSH
         run: |
           ssh \
             -i ~/.ssh/id_ed25519 \
             -o StrictHostKeyChecking=no \
-            ubuntu@${{ secrets.DEV_HOST }} \
+            ${{ inputs.user }}@${{ inputs.host }} \
             "echo SSH connection successful"
+
+
+      # ----------------------------------------------------
+      # STEP 6
+      # Deploy using Ansible
+      # ----------------------------------------------------
 
       - name: Deploy with Ansible
         env:
+
+          # Disable host key checking for this lab.
           ANSIBLE_HOST_KEY_CHECKING: "False"
+
         run: |
+
           ansible-playbook \
             -i ansible/inventory/${{ inputs.inventory }} \
             ansible/playbooks/deploy.yml \

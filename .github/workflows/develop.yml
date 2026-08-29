@@ -1,33 +1,71 @@
+# ==========================================================
+# DEVELOPMENT PIPELINE
+# This is the workflow that starts the development pipeline.
+# ==========================================================
 
 name: Development Pipeline
 
+# ==========================================================
+# TRIGGERS
+# ==========================================================
+
 on:
+
+  # Run when code is pushed to develop.
   push:
     branches:
       - develop
 
+  # Run when a Pull Request targets develop.
   pull_request:
     branches:
       - develop
 
+
+# ==========================================================
+# JOBS
+# ==========================================================
+
 jobs:
+
+  # --------------------------------------------------------
+  # BUILD JOB
+  # --------------------------------------------------------
+  # Instead of writing the build steps here, we call the
+  # reusable shared-build workflow.
+  # --------------------------------------------------------
+
   build:
     uses: ./.github/workflows/shared-build.yml
+
+
+  # --------------------------------------------------------
+  # DEPLOY JOB
+  # --------------------------------------------------------
+  # Deploy starts only after BUILD succeeds.
+  # --------------------------------------------------------
 
   deploy:
     needs: build
 
+    # Call reusable deployment workflow.
     uses: ./.github/workflows/shared-deploy.yml
 
+    # Values passed to the reusable workflow.
     with:
       inventory: development.ini
       environment: development
 
+      # EC2 hostname/IP.
+      host: ${{ secrets.DEV_HOST }}
+
+      # EC2 SSH username.
+      user: ${{ secrets.DEV_USER }}
+
+    # Secrets passed to the reusable workflow.
     secrets:
-      SSH_PRIVATE_KEY: ${{ secrets.DEV_HOST}}
-
-
-
+      # DEV_SSH_KEY contains the actual private SSH key.
+      SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
 # jobs:
 
 #   # ==========================================
