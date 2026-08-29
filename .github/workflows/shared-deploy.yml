@@ -193,7 +193,7 @@ jobs:
           ssh \
             -i ~/.ssh/id_ed25519 \
             -o StrictHostKeyChecking=no \
-            ${{ inputs.user }}@${{ inputs.host }} \
+            ${{ secrets.DEV_USER}}@${{secrets.DEV_HOST}} \
             "echo SSH connection successful"
 
 
