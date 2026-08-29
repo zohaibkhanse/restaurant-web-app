@@ -11,10 +11,23 @@ on:
       - develop
 
 jobs:
-
   build:
     uses: ./.github/workflows/shared-build.yml
 
+  deploy:
+    needs: build
+
+    uses: ./.github/workflows/shared-deploy.yml
+
+    with:
+      inventory: development.ini
+      environment: development
+
+    secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
+
+
+      
 # jobs:
 
 #   # ==========================================

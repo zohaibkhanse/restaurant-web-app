@@ -4,8 +4,6 @@
   become: true
   vars_files:
     - ../group_vars/development.yml
-  vars: 
-    ansible_user: ahmad
   tasks:
 
     - name: Check that requested release exists
