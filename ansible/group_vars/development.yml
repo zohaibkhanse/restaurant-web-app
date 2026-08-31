@@ -1,5 +1,5 @@
 ---
-server_name: 18.225.217.208
+server_name: 3.144.164.7
 ansible_user: ubuntu
 app_name: restaurant-web-app
 deploy_path: /var/www/restaurant-web-app
