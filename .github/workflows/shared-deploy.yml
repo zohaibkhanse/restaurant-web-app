@@ -32,10 +32,10 @@ jobs:
           name: restaurant-web-app-build
           path: dist
 
-      - name: Install Ansible
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ansible
+      # - name: Install Ansible
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y ansible
       - name: Configure SSH
         shell: bash
         run: |
@@ -50,8 +50,7 @@ jobs:
         run: |
           ssh-keygen -lf ~/.ssh/ec2_rsa_key  
       - name: Check SSH host
-        run: |
-          echo '${{vars.DEV_HOST}}'
+        run: echo "${{ secrets.DEV_HOST }}"
 
       - name: Check SSH Key
         run: |
