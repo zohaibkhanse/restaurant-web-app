@@ -43,18 +43,18 @@ jobs:
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY}}' \
-            > ~/.ssh/id_ed25519
+          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY }}' \
+          > ~/.ssh/ec2_rsa_key
 
-          chmod 600 ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/ec2_rsa_key
 
       - name: Verify SSH
         run: |
           ssh \
-            -i ~/.ssh/id_ed25519 \
-            -o StrictHostKeyChecking=no \
-            ubuntu@${{ secrets.DEV_HOST }} \
-            "echo SSH connection successful"
+          -i ~/.ssh/ec2_rsa_key \
+          -o StrictHostKeyChecking=no \
+          ubuntu@${{ secrets.DEV_HOST }} \
+          "echo SSH connection successful"
 
       - name: Deploy with Ansible
         env:

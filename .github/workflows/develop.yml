@@ -25,7 +25,6 @@ jobs:
     secrets:
       # DEV_SSH_KEY contains the actual private SSH key.
       SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
-      DEV_HOST: ${{ secrets.DEV_HOST }}
 
 # jobs:
 
