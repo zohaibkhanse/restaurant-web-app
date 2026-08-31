@@ -99,9 +99,10 @@ jobs:
       - name: Deploy with Ansible
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
+          ANSIBLE_CONFIG: ${{ github.workspace }}/ansible/ansible.cfg
         run: |
-          ansible-playbook \
-            -i ansible/inventory/${{ inputs.inventory }} \
+           ansible-playbook \
+           -i ansible/inventory/${{ inputs.inventory }} \
             ansible/playbooks/deploy.yml \
-            -e "artifact_path=${GITHUB_WORKSPACE}/dist" \
-            -e "release_id=$(date +%Y%m%d%H%M%S)"
+           -e "artifact_path=${GITHUB_WORKSPACE}/dist" \
+           -e "release_id=$(date +%Y%m%d%H%M%S)"
