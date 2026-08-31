@@ -51,7 +51,7 @@ jobs:
           ssh-keygen -lf ~/.ssh/ec2_rsa_key  
       - name: Check SSH host
         run: |
-          echo '${{secrets.DEV_HOST}}'
+          echo '${{vars.DEV_HOST}}'
 
       - name: Check SSH Key
         run: |
