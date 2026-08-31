@@ -14,10 +14,12 @@ on:
     secrets:
       SSH_PRIVATE_KEY:
         required: true
+
       SSH_PASSPHRASE:
         required: true
-    
 
+      DEV_HOST:
+        required: true
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -77,7 +79,7 @@ jobs:
             export DISPLAY=:0
 
             setsid ssh-add ~/.ssh/ec2_rsa_key < /dev/null
-            
+
       - name: Verify SSH
         env:
           DEV_HOST: ${{ secrets.DEV_HOST }}
