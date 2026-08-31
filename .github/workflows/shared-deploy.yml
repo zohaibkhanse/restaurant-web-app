@@ -36,7 +36,16 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible
+      - name: Configure SSH
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
 
+          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY }}' \
+          > ~/.ssh/ec2_rsa_key
+
+          chmod 600 ~/.ssh/ec2_rsa_key
       - name: Check SSH Key
         run: |
           ssh-keygen -lf ~/.ssh/ec2_rsa_key  
