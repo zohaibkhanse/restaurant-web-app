@@ -80,6 +80,11 @@ jobs:
 
             setsid ssh-add ~/.ssh/ec2_rsa_key < /dev/null
 
+            echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+            echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+
+
       - name: Verify SSH
         env:
           DEV_HOST: ${{ secrets.DEV_HOST }}
