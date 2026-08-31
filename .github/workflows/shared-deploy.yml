@@ -48,15 +48,9 @@ jobs:
           > ~/.ssh/ec2_rsa_key
 
           chmod 600 ~/.ssh/ec2_rsa_key
-      - name: Check SSH Key
+      - name: Check SSH Key 1
         run: |
           ssh-keygen -lf ~/.ssh/ec2_rsa_key  
-      - name: Check SSH host
-        run: |
-          echo ""
-          echo "${{ secrets.DEV_HOST }}"
-          cho ""
-        shell: bash
 
       - name: Check SSH Key
         run: |
