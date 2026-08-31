@@ -37,31 +37,45 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ansible
 
-      - name: Configure SSH
-        shell: bash
+      - name: Check SSH Key
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-
-          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY }}' \
-          > ~/.ssh/ec2_rsa_key
-
-          chmod 600 ~/.ssh/ec2_rsa_key
-
-      - name: Verify SSH
+          ssh-keygen -lf ~/.ssh/ec2_rsa_key  
+      - name: Check SSH host
         run: |
-          ssh \
-          -i ~/.ssh/ec2_rsa_key \
-          -o StrictHostKeyChecking=no \
-          ubuntu@3.144.164.7 \
-          "echo SSH connection successful"
-
-      - name: Deploy with Ansible
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: "False"
+          '${{secrets.DEV_HOST}}'
+      - name: Check SSH KEY
         run: |
-          ansible-playbook \
-            -i ansible/inventory/${{ inputs.inventory }} \
-            ansible/playbooks/deploy.yml \
-            -e "artifact_path=${GITHUB_WORKSPACE}/dist" \
-            -e "release_id=$(date +%Y%m%d%H%M%S)"
+          '${{secrets.DEV_SSH_KEY}}'
+
+      - name: Check SSH Key
+        run: |
+          ssh-keygen -y -f ~/.ssh/ec2_rsa_key | ssh-keygen -lf -
+
+      # - name: Configure SSH
+      #   shell: bash
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     chmod 700 ~/.ssh
+
+      #     printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY }}' \
+      #     > ~/.ssh/ec2_rsa_key
+
+      #     chmod 600 ~/.ssh/ec2_rsa_key
+
+      # - name: Verify SSH
+      #   run: |
+      #     ssh \
+      #     -i ~/.ssh/ec2_rsa_key \
+      #     -o StrictHostKeyChecking=no \
+      #     ubuntu@3.144.164.7 \
+      #     "echo SSH connection successful"
+
+      # - name: Deploy with Ansible
+      #   env:
+      #     ANSIBLE_HOST_KEY_CHECKING: "False"
+      #   run: |
+      #     ansible-playbook \
+      #       -i ansible/inventory/${{ inputs.inventory }} \
+      #       ansible/playbooks/deploy.yml \
+      #       -e "artifact_path=${GITHUB_WORKSPACE}/dist" \
+      #       -e "release_id=$(date +%Y%m%d%H%M%S)"
