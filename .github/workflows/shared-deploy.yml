@@ -14,6 +14,8 @@ on:
     secrets:
       SSH_PRIVATE_KEY:
         required: true
+      SSH_PASSPHRASE:
+        required: true
     
 
 jobs:
@@ -50,7 +52,11 @@ jobs:
         run: |
           ssh-keygen -lf ~/.ssh/ec2_rsa_key  
       - name: Check SSH host
-        run: echo "${{ secrets.DEV_HOST }}"
+        run: |
+          echo ""
+          echo "${{ secrets.DEV_HOST }}"
+          cho ""
+        shell: bash
 
       - name: Check SSH Key
         run: |

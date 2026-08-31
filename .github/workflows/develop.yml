@@ -23,8 +23,9 @@ jobs:
       inventory: development.ini
       environment: development
     secrets:
-      # DEV_SSH_KEY contains the actual private SSH key.
       SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
+      SSH_PASSPHRASE: ${{ secrets.DEV_SSH_PASSPHRASE }}
+    
 
 # jobs:
 
