@@ -7,17 +7,20 @@ on:
 
 jobs:
 
+
   build:
     uses: ./.github/workflows/shared-build.yml
-
   deploy:
     needs: build
 
+
     uses: ./.github/workflows/shared-deploy.yml
+
 
     with:
       inventory: staging.ini
       environment: staging
-
     secrets:
-      SSH_PRIVATE_KEY: ${{ secrets.STAGE_SSH_KEY }}
+      SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
+      SSH_PASSPHRASE: ${{ secrets.DEV_SSH_PASSPHRASE }}
+      DEV_HOST: ${{ secrets.DEV_HOST }}

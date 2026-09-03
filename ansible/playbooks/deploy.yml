@@ -2,13 +2,7 @@
 - name: Deploy Restaurant Web App
   hosts: all
   become: true
-  vars_files:
-    - ../group_vars/development.yml
-  # vars:
-  #   ansible_user: ahmad
-  #   app_name: restaurant-web-app
-  #   deploy_path: /var/www/restaurant-web-app
-  #   keep_releases: 5
+
   roles:
     - deploy
     - cleanup

@@ -1,9 +1,7 @@
 ---
-- name: Prepare Development Server
-  hosts: development
+- name: Prepare EC2 Server
+  hosts: all
   become: true
-  vars_files:
-    - ../group_vars/development.yml
-  
+
   roles:
     - common

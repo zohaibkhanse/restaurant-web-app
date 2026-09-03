@@ -9,27 +9,14 @@ jobs:
 
   build:
     uses: ./.github/workflows/shared-build.yml
-
-  security:
+  deploy:
     needs: build
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/shared-deploy.yml
 
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Secret Scan
-        uses: trufflesecurity/trufflehog@main
-
-  # deploy:
-  #   needs:
-  #     - build
-  #     - security
-
-  #   uses: ./.github/workflows/shared-deploy.yml
-
-  #   with:
-  #     inventory: production.ini
-  #     environment: production
-
-  #   secrets:
-  #     SSH_PRIVATE_KEY: ${{ secrets.PROD_SSH_KEY }}
+    with:
+      inventory: production.ini
+      environment: production
+    secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
+      SSH_PASSPHRASE: ${{ secrets.DEV_SSH_PASSPHRASE }}
+      DEV_HOST: ${{ secrets.DEV_HOST }}

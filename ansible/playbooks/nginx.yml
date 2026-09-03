@@ -1,8 +1,7 @@
 ---
 - name: Configure Nginx
-  hosts: development
+  hosts: all
   become: true
-  vars_files:
-    - ../group_vars/development.yml
+  
   roles:
     - nginx

@@ -1,0 +1,111 @@
+name: Infrastructure Configuration
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to configure"
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  configure:
+    name: Configure ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+
+    environment: ${{ inputs.environment }}
+
+    steps:
+
+      # --------------------------------
+      # Checkout
+      # --------------------------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      # --------------------------------
+      # Install Ansible
+      # --------------------------------
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+
+      # --------------------------------
+      # Configure SSH
+      # --------------------------------
+      - name: Configure SSH
+        shell: bash
+        env:
+          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          printf '%s\n' '${{ secrets.SSH_PRIVATE_KEY }}' \
+            > ~/.ssh/ec2_rsa_key
+
+          chmod 600 ~/.ssh/ec2_rsa_key
+
+          cat > ~/.ssh/askpass.sh <<'EOF'
+          #!/bin/bash
+          printf '%s\n' "$SSH_PASSPHRASE"
+          EOF
+
+          chmod 700 ~/.ssh/askpass.sh
+
+          eval "$(ssh-agent -s)"
+
+          export SSH_ASKPASS="$HOME/.ssh/askpass.sh"
+          export SSH_ASKPASS_REQUIRE=force
+          export DISPLAY=:0
+
+          setsid ssh-add ~/.ssh/ec2_rsa_key < /dev/null
+
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+
+      # --------------------------------
+      # Verify SSH
+      # --------------------------------
+      - name: Verify SSH
+        env:
+          DEV_HOST: ${{ secrets.DEV_HOST }}
+        run: |
+          ssh \
+            -o StrictHostKeyChecking=no \
+            ubuntu@"$DEV_HOST" \
+            "echo SSH connection successful"
+
+
+      # --------------------------------
+      # Common Configuration
+      # --------------------------------
+      - name: Run Common Configuration
+        working-directory: ansible
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+        run: |
+          ansible-playbook \
+            -i inventory/${{ inputs.environment }}.ini \
+            playbooks/common.yml
+
+
+      # --------------------------------
+      # Nginx Configuration
+      # --------------------------------
+      - name: Configure Nginx
+        working-directory: ansible
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+        run: |
+          ansible-playbook \
+            -i inventory/${{ inputs.environment }}.ini \
+            playbooks/nginx.yml
