@@ -14,8 +14,8 @@
 
   padding: 18px 8%;
   /* background: rgba(238, 33, 81, 0.932); */
-  /* background: rgba(34, 139, 34, 0.95); */
-  background: rgba(13, 11, 11, 0.983);
+  background: rgba(34, 139, 34, 0.95);
+  /* background: rgba(13, 11, 11, 0.983); */
   backdrop-filter: blur(10px);
 
   z-index: 1000;
