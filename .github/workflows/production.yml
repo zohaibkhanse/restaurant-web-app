@@ -19,4 +19,4 @@ jobs:
     secrets:
       SSH_PRIVATE_KEY: ${{ secrets.DEV_SSH_KEY }}
       SSH_PASSPHRASE: ${{ secrets.DEV_SSH_PASSPHRASE }}
-      DEV_HOST: ${{ secrets.DEV_HOST }}
+      DEV_HOST: ${{ secrets.PROD_HOST }}
